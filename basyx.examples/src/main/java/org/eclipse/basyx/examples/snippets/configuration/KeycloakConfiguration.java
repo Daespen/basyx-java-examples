@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2022 the Eclipse BaSyx Authors
+ * Copyright (C) 2021 the Eclipse BaSyx Authors
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -22,38 +22,53 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.basyx.examples.scenarios.authorization;
+package org.eclipse.basyx.examples.snippets.configuration;
 
-import org.eclipse.basyx.aas.manager.ConnectedAssetAdministrationShellManager;
-import org.eclipse.basyx.aas.registration.api.IAASRegistry;
-import org.eclipse.basyx.examples.scenarios.authorization.registry_using_components.AuthorizedRegistryUsingComponentsScenario;
-import org.eclipse.basyx.examples.scenarios.cloudedgedeployment.ComponentFactory;
-import org.eclipse.basyx.extensions.aas.registration.authorization.AuthorizedAASRegistryProxy;
+import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import org.eclipse.basyx.components.aas.configuration.AASEventBackend;
+import org.eclipse.basyx.components.aas.configuration.AASServerBackend;
+import org.eclipse.basyx.components.configuration.BaSyxConfiguration;
 
 /**
- * A derived helper Class used to build the necessary objects.
+ * Represents a keycloak configuration to be used with a properties file.
  * 
- * @author danish
+ * @author wege
  *
  */
-public class AuthorizedComponentFactory extends ComponentFactory {
-	private static AuthorizationProvider authorizationProvider = new AuthorizationProvider();
+public class KeycloakConfiguration extends BaSyxConfiguration {
+	public static final String KEYCLOAK_CONTEXT_FILE_PATH = "KeycloakContext.properties";
 
-	private final String registryEndpoint;
-
-	public AuthorizedComponentFactory(String registryEndpoint) {
-		this.registryEndpoint = registryEndpoint;
-	}
+	// Configuration keys
+	public static final String SERVER_URL = "serverUrl";
+	public static final String REALM = "realm";
 
 	/**
-	 * Creates a ConnectedAssetAdministrationShellManager connected to the
-	 * Authorized AASServer
-	 * 
+	 * Empty Constructor - use default values
 	 */
-	@Override
-	protected ConnectedAssetAdministrationShellManager getManager() {
-		IAASRegistry registry = new AuthorizedAASRegistryProxy(registryEndpoint, authorizationProvider.getAuthorizationSupplier());
+	public KeycloakConfiguration() {
+		super(new HashMap<>());
+	}
 
-		return new ConnectedAssetAdministrationShellManager(registry);
+	public String getServerUrl() {
+		return getProperty(SERVER_URL);
+	}
+
+	public void setServerUrl(String serverUrl) {
+		setProperty(SERVER_URL, serverUrl);
+	}
+
+	public String getRealm() {
+		return getProperty(REALM);
+	}
+
+	public void setRealm(String realm) {
+		setProperty(REALM, realm);
 	}
 }
